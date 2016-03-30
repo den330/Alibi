@@ -15,6 +15,6 @@ import CoreData
 extension Location {
 
     @NSManaged var address: String
-    @NSManaged var date: NSTimeInterval
+    @NSManaged var date: NSDate
 
 }

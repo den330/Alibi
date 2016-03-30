@@ -10,6 +10,9 @@ import UIKit
 import CoreLocation
 import CoreData
 
+
+
+
 class WhereNowController: UIViewController, CLLocationManagerDelegate {
     
     var managedObjectContext: NSManagedObjectContext!
@@ -26,6 +29,8 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
         location = nil
         startGeoCode = false
     }
+    
+
     
     @IBOutlet weak var message: UILabel!
     
@@ -92,11 +97,24 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
     func alert(){
         let alert = UIAlertController(title: "Current Location", message: CurrentLocation, preferredStyle: .Alert)
         let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
-        let action2 = UIAlertAction(title: "Save", style: .Default, handler: nil)
+        let action2 = UIAlertAction(title: "Save", style: .Default, handler: {_ in self.saveLocation()})
         alert.addAction(action)
         alert.addAction(action2)
         presentViewController(alert, animated: true, completion: nil)
         message.text = "Here you are!"
+    }
+    
+    func saveLocation(){
+        let location = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: managedObjectContext) as! Location
+        location.address = CurrentLocation!
+        let date = NSDate()
+        location.date = date
+        
+        do{
+            try managedObjectContext.save()
+        }catch{
+            print("error")
+        }
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
