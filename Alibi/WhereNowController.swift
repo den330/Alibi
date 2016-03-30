@@ -13,15 +13,23 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
     
     var location: CLLocation?
     var placemark: CLPlacemark?
-    var CurrentLocation = ""
+    var CurrentLocation: String!
     
     var startGeoCode = false
     
     let manager = CLLocationManager()
     let geoCoder = CLGeocoder()
     
+    func initialize(){
+        location = nil
+        startGeoCode = false
+    }
+    
+    @IBOutlet weak var message: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        message.text = "Tap 'Where am I' to locate yourself"
     }
     
     @IBAction func getCurrentLocation(){
@@ -31,10 +39,11 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
             manager.requestWhenInUseAuthorization()
             return
         }
-        
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        initialize()
         manager.startUpdatingLocation()
+        message.text = "Searching..."
     }
     
     func stopUpdate(){
@@ -60,7 +69,6 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
                     self.placemark = p.last
                     self.CurrentLocation = self.stringFromPlacemark(self.placemark!)
                     self.alert()
-                    self.startGeoCode = false
                 }
             }
         }
@@ -69,8 +77,11 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
     func alert(){
         let alert = UIAlertController(title: "Current Location", message: CurrentLocation, preferredStyle: .Alert)
         let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        let action2 = UIAlertAction(title: "Save", style: .Default, handler: nil)
         alert.addAction(action)
-        self.presentViewController(alert, animated: true, completion: nil)
+        alert.addAction(action2)
+        presentViewController(alert, animated: true, completion: nil)
+        message.text = "Here you are!"
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
@@ -98,7 +109,6 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
         if let s = placemark.postalCode {
             line2 += s
         }
-        
         return line1 + "\n" + line2
     }
 }
