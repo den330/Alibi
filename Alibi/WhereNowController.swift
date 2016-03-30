@@ -39,6 +39,12 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
             manager.requestWhenInUseAuthorization()
             return
         }
+        
+        if authStatus == .Denied || authStatus == .Restricted{
+            permissonAlert()
+            return
+        }
+        
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         initialize()
@@ -74,6 +80,13 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
+    func permissonAlert(){
+        let alert = UIAlertController(title: "Location Permisson", message: "Location Service Disabled", preferredStyle: .Alert)
+        let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        alert.addAction(action)
+        presentViewController(alert, animated: true, completion: nil)
+    }
+    
     func alert(){
         let alert = UIAlertController(title: "Current Location", message: CurrentLocation, preferredStyle: .Alert)
         let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
@@ -85,7 +98,11 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        print("Error")
+        if error.code == CLError.LocationUnknown.rawValue{
+            return
+        }
+        stopUpdate()
+        message.text = "Error"
     }
     
     func stringFromPlacemark(placemark: CLPlacemark) -> String{

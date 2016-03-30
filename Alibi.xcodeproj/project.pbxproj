@@ -13,6 +13,7 @@
 		90795A6A1CAA375F0095C66E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90795A681CAA375F0095C66E /* Main.storyboard */; };
 		90795A6C1CAA375F0095C66E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90795A6B1CAA375F0095C66E /* Assets.xcassets */; };
 		90795A6F1CAA375F0095C66E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90795A6D1CAA375F0095C66E /* LaunchScreen.storyboard */; };
+		90AD31EF1CAC26CF008C7B4B /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 90AD31ED1CAC26CF008C7B4B /* Model.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		90795A6B1CAA375F0095C66E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		90795A6E1CAA375F0095C66E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		90795A701CAA375F0095C66E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		90AD31EE1CAC26CF008C7B4B /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				90795A6B1CAA375F0095C66E /* Assets.xcassets */,
 				90795A6D1CAA375F0095C66E /* LaunchScreen.storyboard */,
 				90795A701CAA375F0095C66E /* Info.plist */,
+				90AD31ED1CAC26CF008C7B4B /* Model.xcdatamodeld */,
 			);
 			path = Alibi;
 			sourceTree = "<group>";
@@ -142,6 +145,7 @@
 				90795A671CAA375F0095C66E /* SecondViewController.swift in Sources */,
 				90795A631CAA375F0095C66E /* AppDelegate.swift in Sources */,
 				90795A651CAA375F0095C66E /* WhereNowController.swift in Sources */,
+				90AD31EF1CAC26CF008C7B4B /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,8 +295,22 @@
 				90795A751CAA375F0095C66E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		90AD31ED1CAC26CF008C7B4B /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				90AD31EE1CAC26CF008C7B4B /* Model.xcdatamodel */,
+			);
+			currentVersion = 90AD31EE1CAC26CF008C7B4B /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 90795A571CAA375F0095C66E /* Project object */;
 }
