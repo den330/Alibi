@@ -13,7 +13,9 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
     
     var location: CLLocation?
     var placemark: CLPlacemark?
+    var CurrentLocation = ""
     
+    var startGeoCode = false
     
     let manager = CLLocationManager()
     let geoCoder = CLGeocoder()
@@ -35,21 +37,40 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
         manager.startUpdatingLocation()
     }
     
+    func stopUpdate(){
+        manager.delegate = nil
+        manager.stopUpdatingLocation()
+    }
+    
+    
+    
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        location = locations.last!
-        geoCoder.reverseGeocodeLocation(location!){
-            placemarks, _ in
-            if let p = placemarks where !p.isEmpty{
-                self.placemark = p.last
-                self.manager.delegate = nil
-                self.manager.stopUpdatingLocation()
-                let currentLocation = self.stringFromPlacemark(self.placemark!)
-                let alert = UIAlertController(title: "Curren Location", message: currentLocation, preferredStyle: .Alert)
-                let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
-                alert.addAction(action)
-                self.presentViewController(alert, animated: true, completion: nil)
+        let newLocation = locations.last!
+        if location == nil || newLocation.horizontalAccuracy < location!.horizontalAccuracy{
+            location = newLocation
+            if newLocation.horizontalAccuracy <= manager.desiredAccuracy{
+                stopUpdate()
+                startGeoCode = true
             }
         }
+        if startGeoCode{
+            geoCoder.reverseGeocodeLocation(location!){
+                placemarks, _ in
+                if let p = placemarks where !p.isEmpty{
+                    self.placemark = p.last
+                    self.CurrentLocation = self.stringFromPlacemark(self.placemark!)
+                    self.alert()
+                    self.startGeoCode = false
+                }
+            }
+        }
+    }
+    
+    func alert(){
+        let alert = UIAlertController(title: "Current Location", message: CurrentLocation, preferredStyle: .Alert)
+        let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        alert.addAction(action)
+        self.presentViewController(alert, animated: true, completion: nil)
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
@@ -80,8 +101,6 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
         
         return line1 + "\n" + line2
     }
-    
-        
 }
     
     
