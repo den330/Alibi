@@ -8,9 +8,11 @@
 
 import UIKit
 import CoreLocation
+import CoreData
 
 class WhereNowController: UIViewController, CLLocationManagerDelegate {
     
+    var managedObjectContext: NSManagedObjectContext!
     var location: CLLocation?
     var placemark: CLPlacemark?
     var CurrentLocation: String!
