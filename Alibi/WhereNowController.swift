@@ -53,7 +53,7 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
         }
         
         manager.delegate = self
-        manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         initialize()
         manager.startUpdatingLocation()
         message.text = "Searching..."
@@ -146,7 +146,7 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
         if let s = placemark.postalCode {
             line2 += s
         }
-        return line1 + "\n" + line2
+        return line1 + line2
     }
 }
     
