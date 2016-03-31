@@ -72,6 +72,22 @@ class LocationHistoryController: UITableViewController {
             cell.configureForLocation(location)
             return cell
     }
+    
+    override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+        return nil
+    }
+    
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete{
+            let location = fetchedResultsController.objectAtIndexPath(indexPath) as! Location
+            managedObjectContext.deleteObject(location)
+            do{
+                try managedObjectContext.save()
+            }catch{
+                return
+            }
+        }
+    }
 }
 
 extension LocationHistoryController: NSFetchedResultsControllerDelegate{
