@@ -8,41 +8,58 @@
 
 import UIKit
 import CoreData
+import CoreLocation
 
-private let dateFormatter: NSDateFormatter = {
-    let formatter = NSDateFormatter()
-    formatter.dateStyle = .MediumStyle
-    formatter.timeStyle = .ShortStyle
-    return formatter
-}()
+
 
 class LocationHistoryController: UITableViewController {
     
     var managedObjectContext: NSManagedObjectContext!
-    var locations = [Location]()
+    
+    lazy var fetchedResultsController: NSFetchedResultsController = {
+        let fetchRequest = NSFetchRequest()
+        
+        let entity = NSEntityDescription.entityForName("Location", inManagedObjectContext: self.managedObjectContext)
+        fetchRequest.entity = entity
+        
+        let sortDescriptor = NSSortDescriptor(key: "date", ascending: true)
+        
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        fetchRequest.fetchBatchSize = 20
+        
+        let fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: self.managedObjectContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil)
+        
+        fetchedResultsController.delegate = self
+        return fetchedResultsController
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let fetchrequest = NSFetchRequest()
-        let entity = NSEntityDescription.entityForName("Location", inManagedObjectContext: managedObjectContext)
-        let sortDescriptor = NSSortDescriptor(key: "date", ascending: true)
-        fetchrequest.entity = entity
-        fetchrequest.sortDescriptors = [sortDescriptor]
-        
+        performFetch()
+    }
+    
+    func performFetch(){
         do{
-            let foundObjects = try managedObjectContext.executeFetchRequest(fetchrequest)
-            locations = foundObjects as! [Location]
+            try fetchedResultsController.performFetch()
         }catch{
             return
         }
     }
     
-    func getDate(date: NSDate) -> String{
-        return dateFormatter.stringFromDate(date)
+    deinit {
+        fetchedResultsController.delegate = nil
     }
     
+
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return locations.count
+        let sectionInfo = fetchedResultsController.sections![section]
+        return sectionInfo.numberOfObjects
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -50,14 +67,65 @@ class LocationHistoryController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCellWithIdentifier("Cell")!
-            let location = locations[indexPath.row]
-            let addressLabel = cell.viewWithTag(1000) as! UILabel
-            let dateLabel = cell.viewWithTag(1001) as! UILabel
-            addressLabel.text = location.address
-            dateLabel.text = getDate(location.date)
+            let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! LocationCell
+            let location = fetchedResultsController.objectAtIndexPath(indexPath) as! Location
+            cell.configureForLocation(location)
             return cell
     }
-
 }
+
+extension LocationHistoryController: NSFetchedResultsControllerDelegate{
+    
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        print("*** controllerWillChangeContent")
+        tableView.beginUpdates()
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        switch type {
+        case .Insert:
+            print("*** NSFetchedResultsChangeInsert (object)")
+            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            
+        case .Delete:
+            print("*** NSFetchedResultsChangeDelete (object)")
+            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+            
+        case .Update:
+            print("*** NSFetchedResultsChangeUpdate (object)")
+            if let cell = tableView.cellForRowAtIndexPath(indexPath!) as? LocationCell {
+                let location = controller.objectAtIndexPath(indexPath!) as! Location
+                cell.configureForLocation(location)
+            }
+        case .Move:
+            print("*** NSFetchedResultsChangeMove (object)")
+            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+        }
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        switch type {
+        case .Insert:
+            print("*** NSFetchedResultsChangeInsert (section)")
+            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+            
+        case .Delete:
+            print("*** NSFetchedResultsChangeDelete (section)")
+            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+            
+        case .Update:
+            print("*** NSFetchedResultsChangeUpdate (section)")
+            
+        case .Move:
+            print("*** NSFetchedResultsChangeMove (section)")
+        }
+    }
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        print("*** controllerDidChangeContent")
+        tableView.endUpdates()
+    }
+}
+
 
