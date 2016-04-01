@@ -23,6 +23,9 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
     var location: CLLocation?
     var CurrentLocation: String!
     
+    var longitude: Double!
+    var latitude: Double!
+    
     var startGeoCode = false
     
     var stateString = ""
@@ -93,6 +96,8 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
         if location == nil || newLocation.horizontalAccuracy < location!.horizontalAccuracy{
             location = newLocation
             if newLocation.horizontalAccuracy <= manager.desiredAccuracy{
+                longitude = location!.coordinate.longitude
+                latitude = location!.coordinate.latitude
                 stopUpdate()
                 startGeoCode = true
             }
@@ -146,6 +151,8 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
     func saveLocation(){
         let location = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: managedObjectContext) as! Location
         location.address = CurrentLocation
+        location.latitude = latitude
+        location.longitude = longitude
         let date = NSDate()
         location.date = date
         

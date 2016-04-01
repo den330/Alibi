@@ -2,7 +2,7 @@
 //  Location+CoreDataProperties.swift
 //  Alibi
 //
-//  Created by Yaxin Yuan on 16/3/30.
+//  Created by Yaxin Yuan on 16/4/1.
 //  Copyright © 2016年 Yaxin Yuan. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -14,7 +14,9 @@ import CoreData
 
 extension Location {
 
-    @NSManaged var address: String
+    @NSManaged var address: String?
     @NSManaged var date: NSDate
+    @NSManaged var latitude: Double
+    @NSManaged var longitude: Double
 
 }

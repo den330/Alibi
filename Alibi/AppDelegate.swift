@@ -50,6 +50,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let secondController = controllers[1] as! LocationHistoryController
         secondController.managedObjectContext = managedObjectContext
+        
+        let NavigationController = controllers[2] as! UINavigationController
+        let thirdController = NavigationController.topViewController as! MapViewController
+        thirdController.managedObjectContext = managedObjectContext
         return true
     }
 
