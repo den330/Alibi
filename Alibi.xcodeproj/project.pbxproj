@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		90021C791CAE459600891A02 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90021C781CAE459600891A02 /* Functions.swift */; };
 		904213C41CADB39900AC069E /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904213C31CADB39900AC069E /* LocationCell.swift */; };
 		90795A631CAA375F0095C66E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90795A621CAA375F0095C66E /* AppDelegate.swift */; };
 		90795A651CAA375F0095C66E /* WhereNowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90795A641CAA375F0095C66E /* WhereNowController.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		90021C781CAE459600891A02 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		904213C31CADB39900AC069E /* LocationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
 		90795A5F1CAA375F0095C66E /* Alibi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Alibi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90795A621CAA375F0095C66E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 				90985D1B1CAC319D00CC4EDD /* Location.swift */,
 				90795A621CAA375F0095C66E /* AppDelegate.swift */,
 				90795A641CAA375F0095C66E /* WhereNowController.swift */,
+				90021C781CAE459600891A02 /* Functions.swift */,
 				90795A661CAA375F0095C66E /* LocationHistoryController.swift */,
 				904213C31CADB39900AC069E /* LocationCell.swift */,
 				90795A681CAA375F0095C66E /* Main.storyboard */,
@@ -154,6 +157,7 @@
 				90795A671CAA375F0095C66E /* LocationHistoryController.swift in Sources */,
 				90795A631CAA375F0095C66E /* AppDelegate.swift in Sources */,
 				90795A651CAA375F0095C66E /* WhereNowController.swift in Sources */,
+				90021C791CAE459600891A02 /* Functions.swift in Sources */,
 				90AD31EF1CAC26CF008C7B4B /* Model.xcdatamodeld in Sources */,
 				904213C41CADB39900AC069E /* LocationCell.swift in Sources */,
 				90985D1D1CAC319D00CC4EDD /* Location.swift in Sources */,

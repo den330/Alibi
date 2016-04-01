@@ -13,30 +13,49 @@ import CoreData
 
 
 
+
 class WhereNowController: UIViewController, CLLocationManagerDelegate {
+    
+    @IBOutlet weak var message: UILabel!    
     
     var managedObjectContext: NSManagedObjectContext!
     var location: CLLocation?
     var placemark: CLPlacemark?
     var CurrentLocation: String!
-    
     var startGeoCode = false
+    var stateString = ""
+    
+    let (Searching, Finished, NotStarted, Error) = ("Searching", "Finished", "Not Started", "Error")
     
     let manager = CLLocationManager()
     let geoCoder = CLGeocoder()
+    
+    
+    //Start, Stop, Init
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        stateString = NotStarted
+        configureMessage()
+    }
     
     func initialize(){
         location = nil
         startGeoCode = false
     }
     
-
+    func startUpdate(){
+        initialize()
+        manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        manager.startUpdatingLocation()
+        stateString = Searching
+        configureMessage()
+    }
     
-    @IBOutlet weak var message: UILabel!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        message.text = "Tap 'Where am I' to locate yourself"
+    func stopUpdate(){
+        manager.delegate = nil
+        manager.stopUpdatingLocation()
     }
     
     @IBAction func getCurrentLocation(){
@@ -51,20 +70,21 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
             permissonAlert()
             return
         }
-        
-        manager.delegate = self
-        manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        initialize()
-        manager.startUpdatingLocation()
-        message.text = "Searching..."
+        startUpdate()
     }
     
-    func stopUpdate(){
-        manager.delegate = nil
-        manager.stopUpdatingLocation()
+    func configureMessage(){
+        switch stateString{
+            case Searching: message.text = "Searching..."
+            case Finished: message.text = "Here you go"
+            case Error: message.text = "Found Error"
+            case NotStarted: message.text = "Tap 'Where am I' to get start"
+            default: break
+        }
     }
     
-    
+
+    //Receiving End
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let newLocation = locations.last!
@@ -79,13 +99,29 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
             geoCoder.reverseGeocodeLocation(location!){
                 placemarks, _ in
                 if let p = placemarks where !p.isEmpty{
+                    self.stateString = self.Finished
                     self.placemark = p.last
-                    self.CurrentLocation = self.stringFromPlacemark(self.placemark!)
+                    self.CurrentLocation = stringFromPlacemark(self.placemark!)
                     self.alert()
+                    self.configureMessage()
                 }
             }
         }
     }
+    
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        if error.code == CLError.LocationUnknown.rawValue{
+            return
+        }
+        
+        stateString = Error
+        stopUpdate()
+        configureMessage()
+    }
+    
+    
+    
+    //Some Alert
     
     func permissonAlert(){
         let alert = UIAlertController(title: "Location Permisson", message: "Location Service Disabled", preferredStyle: .Alert)
@@ -101,8 +137,10 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
         alert.addAction(action)
         alert.addAction(action2)
         presentViewController(alert, animated: true, completion: nil)
-        message.text = "Here you are!"
     }
+    
+    
+    //Save
     
     func saveLocation(){
         let location = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: managedObjectContext) as! Location
@@ -113,40 +151,8 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
         do{
             try managedObjectContext.save()
         }catch{
-            print("error")
-        }
-    }
-    
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        if error.code == CLError.LocationUnknown.rawValue{
             return
         }
-        stopUpdate()
-        message.text = "Error"
-    }
-    
-    func stringFromPlacemark(placemark: CLPlacemark) -> String{
-        var line1 = ""
-        
-        if let s = placemark.subThoroughfare {
-            line1 += s + " "
-        }
-        if let s = placemark.thoroughfare {
-            line1 += s
-        }
-        
-        var line2 = ""
-        
-        if let s = placemark.locality {
-            line2 += s + " "
-        }
-        if let s = placemark.administrativeArea {
-            line2 += s + " "
-        }
-        if let s = placemark.postalCode {
-            line2 += s
-        }
-        return line1 + line2
     }
 }
     
