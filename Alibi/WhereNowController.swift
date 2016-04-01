@@ -19,10 +19,12 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var message: UILabel!    
     
     var managedObjectContext: NSManagedObjectContext!
+    
     var location: CLLocation?
-    var placemark: CLPlacemark?
     var CurrentLocation: String!
+    
     var startGeoCode = false
+    
     var stateString = ""
     
     let (Searching, Finished, NotStarted, Error) = ("Searching", "Finished", "Not Started", "Error")
@@ -100,8 +102,7 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
                 placemarks, _ in
                 if let p = placemarks where !p.isEmpty{
                     self.stateString = self.Finished
-                    self.placemark = p.last
-                    self.CurrentLocation = stringFromPlacemark(self.placemark!)
+                    self.CurrentLocation = stringFromPlacemark(p.last!)
                     self.alert()
                     self.configureMessage()
                 }
@@ -144,7 +145,7 @@ class WhereNowController: UIViewController, CLLocationManagerDelegate {
     
     func saveLocation(){
         let location = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: managedObjectContext) as! Location
-        location.address = CurrentLocation!
+        location.address = CurrentLocation
         let date = NSDate()
         location.date = date
         

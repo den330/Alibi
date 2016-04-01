@@ -120,24 +120,6 @@ extension LocationHistoryController: NSFetchedResultsControllerDelegate{
         }
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-        switch type {
-        case .Insert:
-            print("*** NSFetchedResultsChangeInsert (section)")
-            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-            
-        case .Delete:
-            print("*** NSFetchedResultsChangeDelete (section)")
-            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-            
-        case .Update:
-            print("*** NSFetchedResultsChangeUpdate (section)")
-            
-        case .Move:
-            print("*** NSFetchedResultsChangeMove (section)")
-        }
-    }
-    
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         print("*** controllerDidChangeContent")
         tableView.endUpdates()
